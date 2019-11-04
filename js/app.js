@@ -166,41 +166,41 @@ class MyCube{
 		var geometryLine = new THREE.Geometry();
 
 		
-		geometryLine.vertices.push(new THREE.Vector3(-hsize, -1000000, hsize))
-		geometryLine.vertices.push(new THREE.Vector3(-hsize,  1000000, hsize))
+		geometryLine.vertices.push(new THREE.Vector3(-hsize, -1000000, hsize));
+		geometryLine.vertices.push(new THREE.Vector3(-hsize,  1000000, hsize));
 
-		geometryLine.vertices.push(new THREE.Vector3( hsize, -1000000, hsize))
-		geometryLine.vertices.push(new THREE.Vector3( hsize,  1000000, hsize))
+		geometryLine.vertices.push(new THREE.Vector3( hsize, -1000000, hsize));
+		geometryLine.vertices.push(new THREE.Vector3( hsize,  1000000, hsize));
 
-		geometryLine.vertices.push(new THREE.Vector3(-hsize, -1000000, -hsize))
-		geometryLine.vertices.push(new THREE.Vector3(-hsize,  1000000, -hsize))
+		geometryLine.vertices.push(new THREE.Vector3(-hsize, -1000000, -hsize));
+		geometryLine.vertices.push(new THREE.Vector3(-hsize,  1000000, -hsize));
 
-		geometryLine.vertices.push(new THREE.Vector3( hsize, -1000000, -hsize))
-		geometryLine.vertices.push(new THREE.Vector3( hsize,  1000000, -hsize))
+		geometryLine.vertices.push(new THREE.Vector3( hsize, -1000000, -hsize));
+		geometryLine.vertices.push(new THREE.Vector3( hsize,  1000000, -hsize));
 
-		geometryLine.vertices.push(new THREE.Vector3(-1000000, hsize, hsize))
-		geometryLine.vertices.push(new THREE.Vector3( 1000000, hsize, hsize))
+		geometryLine.vertices.push(new THREE.Vector3(-1000000, hsize, hsize));
+		geometryLine.vertices.push(new THREE.Vector3( 1000000, hsize, hsize));
 
-		geometryLine.vertices.push(new THREE.Vector3(-1000000, hsize, -hsize))
-		geometryLine.vertices.push(new THREE.Vector3( 1000000, hsize, -hsize))
+		geometryLine.vertices.push(new THREE.Vector3(-1000000, hsize, -hsize));
+		geometryLine.vertices.push(new THREE.Vector3( 1000000, hsize, -hsize));
 
-		geometryLine.vertices.push(new THREE.Vector3(-1000000, -hsize, hsize))
-		geometryLine.vertices.push(new THREE.Vector3( 1000000, -hsize, hsize))
+		geometryLine.vertices.push(new THREE.Vector3(-1000000, -hsize, hsize));
+		geometryLine.vertices.push(new THREE.Vector3( 1000000, -hsize, hsize));
 
-		geometryLine.vertices.push(new THREE.Vector3(-1000000, -hsize, -hsize))
-		geometryLine.vertices.push(new THREE.Vector3( 1000000, -hsize, -hsize))
+		geometryLine.vertices.push(new THREE.Vector3(-1000000, -hsize, -hsize));
+		geometryLine.vertices.push(new THREE.Vector3( 1000000, -hsize, -hsize));
 
-		geometryLine.vertices.push(new THREE.Vector3( hsize, hsize, -1000000))
-		geometryLine.vertices.push(new THREE.Vector3( hsize, hsize,  1000000))
+		geometryLine.vertices.push(new THREE.Vector3( hsize, hsize, -1000000));
+		geometryLine.vertices.push(new THREE.Vector3( hsize, hsize,  1000000));
 
-		geometryLine.vertices.push(new THREE.Vector3( -hsize, hsize, -1000000))
-		geometryLine.vertices.push(new THREE.Vector3( -hsize, hsize,  1000000))
+		geometryLine.vertices.push(new THREE.Vector3( -hsize, hsize, -1000000));
+		geometryLine.vertices.push(new THREE.Vector3( -hsize, hsize,  1000000));
 
-		geometryLine.vertices.push(new THREE.Vector3( hsize, -hsize, -1000000))
-		geometryLine.vertices.push(new THREE.Vector3( hsize, -hsize,  1000000))
+		geometryLine.vertices.push(new THREE.Vector3( hsize, -hsize, -1000000));
+		geometryLine.vertices.push(new THREE.Vector3( hsize, -hsize,  1000000));
 
-		geometryLine.vertices.push(new THREE.Vector3( -hsize, -hsize, -1000000))
-		geometryLine.vertices.push(new THREE.Vector3( -hsize, -hsize,  1000000))
+		geometryLine.vertices.push(new THREE.Vector3( -hsize, -hsize, -1000000));
+		geometryLine.vertices.push(new THREE.Vector3( -hsize, -hsize,  1000000));
 
 		this.line = new THREE.LineSegments( geometryLine, materialLine );
 	}
@@ -216,8 +216,9 @@ class App{
 		this.WIDTH = container.clientWidth;
 		this.HEIGHT = container.clientHeight;
 
-		this.camera = new THREE.PerspectiveCamera( 70, this.WIDTH / this.HEIGHT, 0.1, 1000000 );
+		this.camera = new THREE.PerspectiveCamera( 70, this.WIDTH / this.HEIGHT, 0.1, 1_000_000 );
 		this.camera.position.z = 400;
+		this.currentPersective = "perspective";
 		this.scene = new THREE.Scene();
 
 		var geometry = new THREE.BoxGeometry( 100, 100, 100 );
@@ -228,6 +229,8 @@ class App{
 
 		this.scene.add( cube.mesh );
 		this.scene.add( cube.line );
+		this.scene.add(this.camera);
+		
 
 		this.renderer = new THREE.WebGLRenderer( { antialias: true } );
 		this.renderer.setPixelRatio(this.WIDTH / this.HEIGHT );
@@ -238,6 +241,8 @@ class App{
 		this.controls = new THREE.OrbitControls(this.camera, this.renderer.domElement );
 		this.controls.screenSpacePanning = true;
 		this.controls.enableKeys = false;
+
+
 
 	}
 
@@ -257,6 +262,37 @@ class App{
 
 	update(){
 		//this.controls.update();
+	}
+
+	switchPerspective(){
+		console.log(this.currentPersective);
+
+		if (this.currentPersective == "perspective"){
+			this.controls.dispose();
+			this.scene.remove(this.camera);
+			this.camera = new THREE.OrthographicCamera(this.WIDTH / - 2, this.WIDTH / 2, this.HEIGHT / 2, this.HEIGHT / - 2, 1, 1_000_000 );
+			this.scene.add(this.camera);
+			this.camera.position.z = 400;
+			this.currentPersective = "orthographic";
+
+			this.controls = new THREE.OrbitControls(this.camera, this.renderer.domElement );
+			this.controls.screenSpacePanning = true;
+			this.controls.enableKeys = false;
+		}
+
+		else if (this.currentPersective == "orthographic"){
+			this.controls.dispose();
+			this.scene.remove(this.camera);
+			this.camera = new THREE.PerspectiveCamera( 70, this.WIDTH / this.HEIGHT, 0.1, 1_000_000 );
+			this.scene.add(this.camera);
+			this.camera.position.z = 400;
+			this.currentPersective = "perspective";
+
+			this.controls = new THREE.OrbitControls(this.camera, this.renderer.domElement );
+			this.controls.screenSpacePanning = true;
+			this.controls.enableKeys = false;
+		}
+		
 	}
 }
 
@@ -296,7 +332,11 @@ function checkKey(e) {
 		}
 	}
 
-	console.log(app.camera.fov);
+	if (e.key == 'p' || e.key == 'P'){ //80
+		app.switchPerspective();
+	}
+
+	//console.log(e);
 
 }
 
