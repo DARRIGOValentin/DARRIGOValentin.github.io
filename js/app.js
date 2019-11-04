@@ -21,6 +21,8 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 authors : Valentin D'arrigo
 */
 
+console.log("VERSION 1.1");
+
 class MyCube{
 
 
@@ -299,7 +301,6 @@ class App{
 app =  new App()
 
 function onWindowResize() {
-	console.log("merde");
 	app.resize();
 }
 
