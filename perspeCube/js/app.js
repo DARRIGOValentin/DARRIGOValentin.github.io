@@ -227,7 +227,7 @@ class App{
 		var material = new THREE.MeshBasicMaterial( {color: 0x00ff00} );
 		var obj = new THREE.Mesh( geometry, material );
 
-		var cube = new MyCube(200);
+		var cube = this.cube = new MyCube(200);
 
 		this.scene.add( cube.mesh );
 		this.scene.add( cube.line );
@@ -300,6 +300,9 @@ class App{
 
 app =  new App()
 
+app.cube.mesh.rotateY(Math.PI/8);
+app.cube.line.rotateY(Math.PI/8);
+
 function onWindowResize() {
 	app.resize();
 }
@@ -309,6 +312,9 @@ window.addEventListener( 'resize', onWindowResize, false );
 
 function animate() {
 	requestAnimationFrame( animate );
+	console.log(app.cube);
+	//app.cube.mesh.rotateX(0.01);
+	//app.cube.line.rotateX(0.01);
 	app.update();
 	app.render();
 }
