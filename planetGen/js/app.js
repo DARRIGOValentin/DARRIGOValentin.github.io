@@ -27,7 +27,6 @@ import terrain_frag from './terrain_frag.glsl.js'
 console.log("VERSION 1.0");
 
 class App{
-	// Create the three.js canvas, which contains the grids
 
 	constructor(){
 
@@ -43,9 +42,6 @@ class App{
 
 		/* ========================================================================================================================================== */
 
-		//const geometry = new THREE.SphereBufferGeometry( 200, 80, 80 );
-
-
 		const loader = new THREE.OBJLoader();
 
 		var ico;
@@ -58,59 +54,51 @@ class App{
 			// called when resource is loaded
 			function ( object ) {
 		
-				//scene.add( object );
-				//console.log);
 				ico = (object.children[0].geometry);
-				console.log("OK");
 
 				var material = this_.mat = new THREE.RawShaderMaterial( {
 					uniforms: {
-						lacunarity: { value: 1.4 },
-						persistance: { value: 0.8 },
-						zoom: { value: 180.0 }
+						lacunarity: { value: 2.1 },
+						persistance: { value: 0.7 },
+						zoom: { value: 250.0 },
+						
+						snowHeight: { value: 0.4 },
+						mountainHeight: { value: 0.2 },
+						grassHeight: { value: 0.0 },
+						waterHeight: { value: -0.1 },
+						reliefExageration: { value: 0.02},
+
+						snowColor: { value: new THREE.Color(1.0, 1.0, 1.0)},
+						mountainColor: { value: new THREE.Color(0.4, 0.0, 0.0)},
+						grassColor: { value: new THREE.Color(0.0, 0.8, 0.0)},
+						waterColor: { value: new THREE.Color(0.5, 0.5, 1.0)},
+						deepWaterColor: { value: new THREE.Color(0.0, 0.0, 0.7)},
 					},
 					vertexShader: terrain_vert,
 					fragmentShader: terrain_frag,
 					side: THREE.DoubleSide,
 				} );
 				
-				
-		
-		
 				const plane = new THREE.Mesh( ico, material );
 		
 				var terrain = this_.terrain = plane;
 		
 				this_.scene.add( terrain );
-				
-		
 			},
-			// called when loading is in progresses
+			
 			function ( xhr ) {
-		
 				console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
-		
 			},
-			// called when loading has errors
+			
 			function ( error ) {
-		
 				console.log( 'An error happened' );
-		
 			}
 		);
-		
-		//const positions = geometry.attributes.position.array;
 
 		/* ========================================================================================================================================== */
 
 
 		this.scene.add(this.camera);
-
-		//console.log(terrain.geometry.attributes.position.array);	
-		
-
-
-		
 
 		this.renderer = new THREE.WebGLRenderer( { antialias: true } );
 		this.renderer.setPixelRatio(this.WIDTH / this.HEIGHT );
@@ -151,72 +139,140 @@ function onWindowResize() {
 
 window.addEventListener( 'resize', onWindowResize, false );
 
-
 function animate() {
 	requestAnimationFrame( animate );;
 	app.update();
 	app.render();
 }
 
-window.onkeydown = checkKey;
+function zoomOnChange(value){
+	app.mat.uniforms.zoom.value = value;
+}
 
-function checkKey(e) {
+function lacunarityOnChange(value){
+	app.mat.uniforms.lacunarity.value = value;
+}
 
-	console.log(e);
+function persistanceOnChange(value){
+	app.mat.uniforms.persistance.value = value;
+}
 
-	if (e.keyCode == '37') {
-	// left arrow
-		if (app.camera.fov > 1 ){
-			app.camera.fov -= 1;
-			app.camera.updateProjectionMatrix();
-		}
-     
-	}
-	else if (e.keyCode == '39') {
-	// right arrow
-		if (app.camera.fov < 180 ){
-			app.camera.fov += 1;
-			app.camera.updateProjectionMatrix();
-		}
-	}
+function snowHeightOnChange(value){
+	app.mat.uniforms.snowHeight.value = value;
+}
 
-	if (e.key == 'p' || e.key == 'P'){ //80
-		//app.switchPerspective();
-		console.log("888888888");
-	}
+function mountainHeightOnChange(value){
+	app.mat.uniforms.mountainHeight.value = value;
+}
 
-	if (e.key == 'a' || e.key == 'A'){ //80
-		app.mat.uniforms.lacunarity.value += 0.1;
-		console.log(app.mat.uniforms.lacunarity.value);
-	}
+function grassHeightOnChange(value){
+	app.mat.uniforms.grassHeight.value = value;
+}
 
-	if (e.key == 'z' || e.key == 'Z'){ //80
-		app.mat.uniforms.lacunarity.value -= 0.1;
-		console.log(app.mat.uniforms.lacunarity.value);
-	}
+function waterHeightOnChange(value){
+	app.mat.uniforms.waterHeight.value = value;
+}
 
-	if (e.key == 'q' || e.key == 'Q'){ //80
-		app.mat.uniforms.persistance.value += 0.1;
-		console.log(app.mat.uniforms.persistance.value);
-	}
+function reliefExagerationOnChange(value){
+	app.mat.uniforms.reliefExageration.value = value;
+}
 
-	if (e.key == 's' || e.key == 'S'){ //80
-		app.mat.uniforms.persistance.value -= 0.1;
-		console.log(app.mat.uniforms.persistance.value);
-	}
+function snowColorOnChange(value){
+	const colorNumber = Number("0x" + value.substring(1) );
+	app.mat.uniforms.snowColor.value = new THREE.Color(colorNumber);
+}
 
-	if (e.key == 'w' || e.key == 'W'){ //80
-		app.mat.uniforms.zoom.value += 0.1;
-		console.log(app.mat.uniforms.zoom.value);
-	}
+function mountainColorOnChange(value){
+	const colorNumber = Number("0x" + value.substring(1) );
+	app.mat.uniforms.mountainColor.value = new THREE.Color(colorNumber);
+}
 
-	if (e.key == 'x' || e.key == 'X'){ //80
-		app.mat.uniforms.zoom.value -= 0.1;
-		console.log(app.mat.uniforms.zoom.value);
-	}
+function grassColorOnChange(value){
+	const colorNumber = Number("0x" + value.substring(1) );
+	app.mat.uniforms.grassColor.value = new THREE.Color(colorNumber);
+}
 
-	//console.log(e);
+function waterColorOnChange(value){
+	const colorNumber = Number("0x" + value.substring(1) );
+	app.mat.uniforms.waterColor.value = new THREE.Color(colorNumber);
+}
+
+function deepWaterColorOnChange(value){
+	const colorNumber = Number("0x" + value.substring(1) );
+	app.mat.uniforms.deepWaterColor.value = new THREE.Color(colorNumber);
+}
+
+function setEvent(){
+	console.log("OK EVENT");
+	var el;
+
+	el = document.getElementById('zoomInput');
+	el.addEventListener('change', function(e){
+		zoomOnChange(this.value);
+	}, false);
+
+	el = document.getElementById('lacunarityInput');
+	el.addEventListener('change', function(e){
+		lacunarityOnChange(this.value);
+	}, false);
+
+	el = document.getElementById('persistanceInput');
+	el.addEventListener('change', function(e){
+		persistanceOnChange(this.value);
+	}, false);
+
+	el = document.getElementById('snowHeightInput');
+	el.addEventListener('change', function(e){
+		snowHeightOnChange(this.value);
+	}, false);
+
+	el = document.getElementById('mountainHeightInput');
+	el.addEventListener('change', function(e){
+		mountainHeightOnChange(this.value);
+	}, false);
+
+	el = document.getElementById('grassHeightInput');
+	el.addEventListener('change', function(e){
+		grassHeightOnChange(this.value);
+	}, false);
+
+	el = document.getElementById('waterHeightInput');
+	el.addEventListener('change', function(e){
+		waterHeightOnChange(this.value);
+	}, false);
+
+	el = document.getElementById('reliefExagerationInput');
+	el.addEventListener('change', function(e){
+		reliefExagerationOnChange(this.value);
+	}, false);
+
+	el = document.getElementById('snowColorInput');
+	el.addEventListener('change', function(e){
+		snowColorOnChange(this.value);
+	}, false);
+
+	el = document.getElementById('mountainColorInput');
+	el.addEventListener('change', function(e){
+		mountainColorOnChange(this.value);
+	}, false);
+
+	el = document.getElementById('grassColorInput');
+	el.addEventListener('change', function(e){
+		grassColorOnChange(this.value);
+	}, false);
+
+	el = document.getElementById('waterColorInput');
+	el.addEventListener('change', function(e){
+		waterColorOnChange(this.value);
+	}, false);
+
+	el = document.getElementById('deepWaterColorInput');
+	el.addEventListener('change', function(e){
+		deepWaterColorOnChange(this.value);
+	}, false);
 
 }
+
+setEvent();
 
 animate();

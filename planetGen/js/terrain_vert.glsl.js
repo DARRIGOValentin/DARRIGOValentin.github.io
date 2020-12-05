@@ -17,57 +17,16 @@ uniform float persistance;
 uniform float lacunarity;
 uniform float zoom;
 
-vec3 permute(vec3 x){
-    return mod(((x*34.0) + 1.0)*x, 289.0 );
-}
+//helpful source : http://webstaff.itn.liu.se/~stegu/jgt2012/article.pdf
+
+uniform float reliefExageration;
 
 vec4 permute(vec4 x){
     return mod(((x*34.0) + 1.0)*x, 289.0 );
 }
 
-vec3 taylorInvSqrt(vec3 r){
-    return 1.79284291400159 - 0.85373472095314 * r;
-}
-
 vec4 taylorInvSqrt(vec4 r){
     return 1.79284291400159 - 0.85373472095314 * r;
-}
-
-float snoise(vec2 P){
-
-    const vec2 C = vec2 (0.211324865405187134,
-                          0.3660254037844384438597);
-    
-    vec2 i = floor(P + dot(P, C.yy));
-    vec2 x0 = P - i + dot(i, C.xx);
-
-    vec2 i1;
-    i1.x = step(x0.y, x0.x);
-    i1.y = 1.0 - i1.x;
-
-    vec4 x12 = x0.xyxy + vec4 (C.xx, C.xx * 2.0 - 1.0);
-    x12.xy -= i1;
-
-    i = mod (i, 289.0);
-    vec3 p = permute(permute(i.y+vec3(0.0, i1.y, 1.0)) + i.x + vec3(0.0, i1.x, 1.0));
-
-    vec3 m = max(0.5 - vec3(dot(x0, x0), dot(x12.xy, x12.xy), dot (x12.zw, x12.zw)), 0.0);
-
-    m = m*m;
-    m = m*m;
-
-    vec3 x = fract(p*(1.0 / 41.0)) * 2.0 - 1.0;
-    vec3 gy = abs(x) - 0.5;
-    vec3 ox = floor (x+0.5);
-    vec3 gx = x - ox;
-
-    m *= taylorInvSqrt(gx*gx + gy*gy);
-
-    vec3 g;
-    g.x = gx.x * x0.x + gy.x * x0.y;
-    g.yz = gx.yz * x12.xz + gy.yz * x12.yw;
-
-    return 130.0 * dot(m, g);
 }
 
 float snoise3(vec3 v){
@@ -137,9 +96,6 @@ float snoise3(vec3 v){
 
 float fbm_noise2(float x, float y, float z){
 
-    //float lacunarity = 0.3;
-    //float persistance = 3.5;
-
     float freq = 1.0;
     float amp = 1.0;
     float max = 0.0;
@@ -147,8 +103,6 @@ float fbm_noise2(float x, float y, float z){
 
     for(int i = 0; i < 6; i++){
         total += snoise3( vec3(x*freq, y*freq, z*freq) ) * amp;
-        //total += snoise3( vec3(0.0, 0.0, 0.0) ) * amp;
-        //total += noise2( x*freq, y*freq ) * amp;
         max += amp;
         freq *= lacunarity;
         amp *= persistance;
@@ -159,13 +113,9 @@ float fbm_noise2(float x, float y, float z){
 
 void main()	{
 
-    //init_PERM();
-    //init_GRAD3();
-
     float noise = fbm_noise2(position.x / zoom, position.y / zoom, position.z / zoom);
 
-    vec3 newPos = position * (1.0 + noise/50.0);
-    //vec3 newPos = position;
+    vec3 newPos = position * (1.0 + noise * reliefExageration);
 
     elevation = noise;
     gl_Position = projectionMatrix * modelViewMatrix * vec4( newPos, 1.0 );

@@ -5,23 +5,34 @@ export default /* glsl */ `
 
     varying float elevation;
 
+    uniform float snowHeight;
+    uniform float mountainHeight;
+    uniform float grassHeight;
+    uniform float waterHeight;
+
+    uniform vec3 snowColor;
+    uniform vec3 mountainColor;
+    uniform vec3 grassColor;
+    uniform vec3 waterColor;
+    uniform vec3 deepWaterColor;
+
 
     void main()	{
 
-        if (elevation > 0.7){
-            gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);
+        if (elevation > snowHeight){
+            gl_FragColor = vec4(snowColor, 1.0);
         }
-        else if (elevation > 0.3){
-            gl_FragColor = vec4(0.3, 0.0, 0.0, 1.0);
+        else if (elevation > mountainHeight){
+            gl_FragColor = vec4(mountainColor, 1.0);
         }
-        else if (elevation > 0.0){
-            gl_FragColor = vec4(0.0, 0.8, 0.0, 1.0);
+        else if (elevation > grassHeight){
+            gl_FragColor = vec4(grassColor, 1.0);
         }
-        else if (elevation > -0.3){
-            gl_FragColor = vec4(0.0, 0.0, 1.0, 1.0);
+        else if (elevation > waterHeight){
+            gl_FragColor = vec4(waterColor, 1.0);
         }
         else{
-            gl_FragColor = vec4(0.0, 0.0, 0.5, 1.0);
+            gl_FragColor = vec4(deepWaterColor, 1.0);
         }
         
 

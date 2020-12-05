@@ -2,16 +2,95 @@
   <head>
     <title>Planet Generation</title>
 	<style>
-		html, body { margin: 0; padding: 0; overflow: hidden; }
-		#canvasHolder { position:absolute;
-		                width:100%;
-		                height:100%; }
+		@import "./css/scrollbar.css";
+		@import "./css/modal.css";
+		@import "./css/elements.css";
 	</style>
   </head>
   <body>
 
+	<header>
+		<p style="margin:0; font-size:35px; font-weight:bold;">Planet Generation</p>
+		
+		Zoom
+			<input type="number" id="zoomInput"        style="margin-right:20px" value="250"  step="10" />
+		Lacunarity :
+			<input type="number" id="lacunarityInput"  style="margin-right:20px" value="2.1"  step="0.1"/>
+		Persistance :
+			<input type="number" id="persistanceInput" style="margin-right:40px" value="0.7"  step="0.1"/>
+		</header>
+
   	<div class="canvasDiv" id="canvasHolder">
 	</div>
+
+	<nav>
+
+		<!-- Main controls-->
+		<div id="main controls" class="controlGroup">
+		<p class="groupTitle">Heigths parameters</p>
+			
+			snow : 
+			<input type="number" id="snowHeightInput" style="width: 50px;" value="0.7"  step="0.1" />
+			</br>
+				
+			Mountain : 
+			<input type="number" id="mountainHeightInput" style="width: 50px;" value="0.3"  step="0.1" />
+			</br>
+
+			Grass : 
+			<input type="number" id="grassHeightInput" style="width: 50px;" value="0.0"  step="0.1" />
+			</br>
+
+			Water : 
+			<input type="number" id="waterHeightInput" style="width: 50px;" value="-0.3"  step="0.1" />
+			</br>
+
+
+
+			</span style="right:15px; position:absolute">
+	
+		<!-- Penrose controls -->
+		<div id="penroseParams" style="position:relative">
+		<br>
+		relief exageration : 
+		<input type="number" id="reliefExagerationInput" value="0.02" step="0.02" style="right:5px; bottom:0px; position:absolute;"/>
+		&nbsp;
+		</div>
+		</div>
+	
+		<!-- Mouse controls -->
+		<div id="mouse controls" class="controlGroup">
+			<p class="groupTitle">Colors</p>
+			
+			Snow :
+			<input type="color" id="snowColorInput" value="#ffffff" style="width: 70px;" />
+			</br>
+
+			Mountain :
+			<input type="color" id="mountainColorInput" value="#550000" style="width: 70px;" />
+			</br>
+
+			Grass :
+			<input type="color" id="grassColorInput" value="#00bb00" style="width: 70px;" />
+			</br>
+
+			Water :
+			<input type="color" id="waterColorInput" value="#8888ff" style="width: 70px;" />
+			</br>
+
+			Deep Water :
+			<input type="color" id="deepWaterColorInput" value="#0000cc" style="width: 70px;" />
+			</br>
+			
+		</div>
+
+		</nav>
+
+		<div id="colors" class="modal">
+			<div class="modal-content">
+			  <span class="close">&times;</span>
+			</div>
+		  </div>
 
 	<!-- JS Sources -->
     <script src="./js/three.min.js"></script>
