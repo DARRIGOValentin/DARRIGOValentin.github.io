@@ -1,0 +1,45 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>WebGL video editing</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="app.js" type="module" defer></script>
+  </head>
+
+  <body>
+
+    <div class="example">
+      <canvas id="glcanvas" width="640" height="480"></canvas>
+
+    <div class="slidecontainer">
+      <input type="range" id="sliderRValue" min="0" max="1" value="1" step="0.05" class="slider">
+      <span>Red value: </span>
+      <span id="ROutput">value</span>
+    </div>
+
+    <div class="slidecontainer" class="example">
+      <input type="range" id="sliderGValue" min="0" max="1" value="1" step="0.05" class="slider">
+      <span>Green value: </span>
+      <span id="GOutput">value</span>
+    </div>
+
+    <div class="slidecontainer">
+      <input type="range" id="sliderBValue" min="0" max="1" value="1" step="0.05" class="slider">
+      <span>Blue value: </span>
+      <span id="BOutput">value</span>
+    </div>
+
+    <div class="slidecontainer">
+      <label  for="operations">Choose an operation:</label>
+
+      <select name="operations" id="operations">
+        <option value="multiply">multiply</option>
+        <option value="divide">divide</option>
+      </select>
+    </div>
+    
+    </div>
+    
+  </body>
+</html>
